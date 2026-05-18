@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import AuthService from '../services/auth.service';
-import { borrowService } from '../services/api.service';
+import { borrowRequestService } from '../services/api.service';
 
 function BookDetails() {
   const { id } = useParams();
@@ -28,7 +28,7 @@ function BookDetails() {
     }
   };
 
-  const handleBorrow = async () => {
+  const handleRequest = async () => {
     const user = AuthService.getUser();
     if (!user) {
       navigate('/login');
@@ -37,29 +37,29 @@ function BookDetails() {
 
     setBorrowing(true);
     try {
-      const result = await borrowService.borrow(id);
+      const result = await borrowRequestService.create(id);
       if (result.error) {
         alert(result.error);
       } else {
-        alert('Book borrowed successfully!');
+        alert('Borrow request submitted! An admin will review it.');
         navigate('/my-borrows');
       }
     } catch (err) {
-      alert('Failed to borrow book');
+      alert('Failed to submit borrow request');
     } finally {
       setBorrowing(false);
     }
   };
 
-  if (loading) return <div className="text-center py-12">Loading...</div>;
-  if (error) return <div className="text-center py-12 text-red-600">{error}</div>;
+  if (loading) return <div className="text-center py-12 text-[var(--text-muted)]">Loading...</div>;
+  if (error) return <div className="text-center py-12 text-red-400">{error}</div>;
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="card">
         <div className="flex flex-col md:flex-row gap-8">
           <div className="w-full md:w-1/3">
-            <div className="bg-gray-200 rounded-xl h-80 flex items-center justify-center">
+            <div className="bg-[var(--bg-surface)] rounded-xl h-80 flex items-center justify-center border border-[var(--border-color)]">
               {book.cover_image_url ? (
                 <img src={book.cover_image_url} alt={book.title} className="h-full object-cover rounded-xl" />
               ) : (
@@ -68,14 +68,14 @@ function BookDetails() {
             </div>
           </div>
           <div className="flex-1">
-            <h1 className="text-3xl font-bold mb-2">{book.title}</h1>
-            <p className="text-xl text-gray-600 mb-4">by {book.author}</p>
+            <h1 className="text-3xl font-bold mb-2 text-[var(--text-primary)]">{book.title}</h1>
+            <p className="text-xl text-[var(--text-muted)] mb-4">by {book.author}</p>
             
             <div className="space-y-2 mb-6">
-              <p><span className="font-semibold">Genre:</span> {book.genre}</p>
-              <p><span className="font-semibold">Published:</span> {book.published_year}</p>
-              <p><span className="font-semibold">Available:</span> 
-                <span className={book.available > 0 ? 'text-green-600' : 'text-red-600'}>
+              <p className="text-[var(--text-primary)]"><span className="font-semibold">Genre:</span> {book.genre}</p>
+              <p className="text-[var(--text-primary)]"><span className="font-semibold">Published:</span> {book.published_year}</p>
+              <p className="text-[var(--text-primary)]"><span className="font-semibold">Available:</span>
+                <span className={book.available > 0 ? 'text-green-400' : 'text-red-400'}>
                   {book.available} copies
                 </span>
               </p>
@@ -83,14 +83,14 @@ function BookDetails() {
 
             {book.available > 0 ? (
               <button
-                onClick={handleBorrow}
+                onClick={handleRequest}
                 disabled={borrowing}
                 className="btn-primary disabled:opacity-50"
               >
-                {borrowing ? 'Borrowing...' : 'Borrow This Book'}
+                {borrowing ? 'Submitting...' : 'Request to Borrow'}
               </button>
             ) : (
-              <button disabled className="bg-gray-400 text-white px-6 py-2 rounded-lg cursor-not-allowed">
+              <button disabled className="bg-[var(--text-muted)] text-[var(--text-primary)] px-6 py-2 rounded-lg cursor-not-allowed opacity-50">
                 Not Available
               </button>
             )}

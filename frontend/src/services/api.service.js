@@ -53,4 +53,14 @@ export const userService = {
   getStats: async () => apiRequest('/api/users/stats')
 };
 
-export default { bookService, borrowService, requestService, notificationService, userService };
+export const borrowRequestService = {
+  create: async (book_id) => apiRequest('/api/borrow-requests', { method: 'POST', body: JSON.stringify({ book_id }) }),
+  getMyRequests: async () => apiRequest('/api/borrow-requests/my-requests'),
+  getMyLimits: async () => apiRequest('/api/borrow-requests/my-limits'),
+  getAllRequests: async () => apiRequest('/api/borrow-requests/all'),
+  getPendingCount: async () => apiRequest('/api/borrow-requests/pending-count'),
+  approve: async (id) => apiRequest(`/api/borrow-requests/${id}/approve`, { method: 'POST' }),
+  reject: async (id, notes) => apiRequest(`/api/borrow-requests/${id}/reject`, { method: 'POST', body: JSON.stringify({ notes }) })
+};
+
+export default { bookService, borrowService, requestService, notificationService, userService, borrowRequestService };

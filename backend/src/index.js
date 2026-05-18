@@ -18,10 +18,12 @@ const authRoutes = require('./routes/auth.routes');
 const userRoutes = require('./routes/user.routes');
 const bookRoutes = require('./routes/book.routes');
 const borrowRoutes = require('./routes/borrow.routes');
+const borrowRequestRoutes = require('./routes/borrow-request.routes');
 const requestRoutes = require('./routes/request.routes');
 const notificationRoutes = require('./routes/notification.routes');
 const orderRoutes = require('./routes/order.routes');
 const adminRoutes = require('./routes/admin.routes');
+const uploadRoutes = require('./routes/upload.routes');
 
 // Health check
 app.get('/health', (req, res) => {
@@ -33,10 +35,12 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/books', bookRoutes);
 app.use('/api/borrow', borrowRoutes);
+app.use('/api/borrow-requests', borrowRequestRoutes);
 app.use('/api/requests', requestRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // 404 handler
 app.use((req, res) => {
